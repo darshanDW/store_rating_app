@@ -1,73 +1,190 @@
-FullStack Intern Coding Challenge
-Tech Stack
-● Backend: Any one of backend framework from this ExpressJs/Loopback/NestJs
-● Database: PostgreSQL/MySQL
-● Frontend: ReactJs
-Requirements
-We need a web application that allows users to submit ratings for stores registered on the
-platform. The ratings should range from 1 to 5.
-A single login system should be implemented for all users. Based on their roles, users will
-have access to different functionalities upon logging in.
-Normal users should be able to sign up on the platform through a registration page.
-User Roles
-1. System Administrator
-2. Normal User
-3. Store Owner
-Functionalities
-System Administrator
-● Can add new stores, normal users, and admin users.
-● Has access to a dashboard displaying:
-○ Total number of users
-○ Total number of stores
-○ Total number of submitted ratings
-● Can add new users with the following details:
-○ Name
-○ Email
-○ Password
-○ Address
-● Can view a list of stores with the following details:
-○ Name, Email, Address, Rating
-● Can view a list of normal and admin users with:
-○ Name, Email, Address, Role
-● Can apply filters on all listings based on Name, Email, Address, and Role.
-● Can view details of all users, including Name, Email, Address, and Role.
-○ If the user is a Store Owner, their Rating should also be displayed.
-● Can log out from the system.
-Normal User
+# EduPlus Fullstack Application
 
-● Can sign up and log in to the platform.
-● Signup form fields:
-○ Name
-○ Email
-○ Address
-○ Password
-● Can update their password after logging in.
-● Can view a list of all registered stores.
-● Can search for stores by Name and Address.
-● Store listings should display:
-○ Store Name
-○ Address
-○ Overall Rating
-○ User's Submitted Rating
-○ Option to submit a rating
-○ Option to modify their submitted rating
-● Can submit ratings (between 1 to 5) for individual stores.
-● Can log out from the system.
-Store Owner
-● Can log in to the platform.
-● Can update their password after logging in.
-● Dashboard functionalities:
-○ View a list of users who have submitted ratings for their store.
-○ See the average rating of their store.
-● Can log out from the system.
-Form Validations
-● Name: Min 20 characters, Max 60 characters.
-● Address: Max 400 characters.
-● Password: 8-16 characters, must include at least one uppercase letter and one
-special character.
-● Email: Must follow standard email validation rules.
-Additional Notes
-● All tables should support sorting (ascending/descending) for key fields like Name,
-Email, etc.
-● Best practices should be followed for both frontend and backend development.
-● Database schema design should adhere to best practices.
+A web platform for store ratings with role-based access for System Administrators, Store Owners, and Normal Users.
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Setup Instructions](#setup-instructions)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [API Endpoints](#api-endpoints)
+- [Validation Rules](#validation-rules)
+- [Role Functionalities](#role-functionalities)
+- [Demo Users](#demo-users)
+- [Notes](#notes)
+
+---
+
+## Features
+
+- User authentication (JWT)
+- Role-based dashboards (admin, owner, user)
+- Store management (admin)
+- User management (admin)
+- Store ratings (user)
+- Owner dashboard (see ratings for their store)
+- Sorting/filtering on all lists
+- Secure password hashing and validation
+
+---
+
+## Tech Stack
+
+- **Backend:** Node.js, Express.js, PostgreSQL, TypeORM, JWT
+- **Frontend:** React.js, Axios, React Router
+
+---
+
+## Setup Instructions
+
+### Backend Setup
+
+1. **Clone the repository and navigate to the backend folder:**
+   ```bash
+   cd backend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure PostgreSQL:**
+   - Edit `ormconfig.js` with your DB credentials.
+   - Make sure PostgreSQL is running and a database (e.g., `eduplus`) is created.
+
+4. **Create the first admin user:**
+   - Manually insert into the database, or use a seed script.
+   - Example SQL (replace the password hash with a bcrypt hash of your password):
+     ```sql
+     INSERT INTO users (name, email, password, address, role)
+     VALUES (
+       'System Administrator Example Name',
+       'admin@example.com',
+       '$2a$10$yourbcryptpasswordhash',
+       'Admin Address',
+       'admin'
+     );
+     ```
+   - To generate a bcrypt hash:
+     ```js
+     require('bcryptjs').hashSync('YourPassword@1', 10)
+     ```
+
+5. **Start the backend server:**
+   ```bash
+   npm start
+   ```
+   - Runs at `http://localhost:4000/api`
+
+---
+
+### Frontend Setup
+
+1. **Navigate to the frontend folder:**
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the frontend app:**
+   ```bash
+   npm start
+   ```
+   - Runs at `http://localhost:3000`
+   - Connects to backend at `http://localhost:4000/api`
+
+---
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` — Register as normal user
+- `POST /api/auth/login` — Login (returns JWT)
+
+### Users (Admin)
+- `GET /api/users` — List/filter users
+- `POST /api/users` — Create user (admin/user/owner)
+- `PUT /api/users/password` — Update own password
+- `GET /api/users/me` — Get own info
+
+### Stores
+- `GET /api/stores` — List/filter stores (all roles)
+- `POST /api/stores` — Create store (admin)
+- `GET /api/stores/owner/dashboard` — Owner dashboard (owner)
+
+### Ratings
+- `POST /api/ratings` — Submit/update rating (user)
+- `GET /api/ratings` — List all ratings (admin)
+
+---
+
+## Validation Rules
+
+- **Name:** 20–60 characters
+- **Address:** max 400 characters
+- **Password:** 8–16 characters, at least one uppercase letter, at least one special character
+- **Email:** valid email format
+
+---
+
+## Role Functionalities
+
+### System Administrator
+- Add new stores, normal users, and admin users
+- Dashboard: total users, stores, ratings
+- View/filter users and stores
+- View user details (if owner, see their rating)
+- Log out
+
+### Normal User
+- Register and log in
+- Update password
+- View/search stores
+- See store details, overall rating, and their submitted rating
+- Submit/modify ratings (1–5)
+- Log out
+
+### Store Owner
+- Log in
+- Update password
+- Dashboard: see users who rated their store and average rating
+- Log out
+
+---
+
+## Demo Users
+
+- **Admin:**  
+  Email: `admin@example.com`  
+  Password: `AdminPass@1`
+
+- **Owner:**  
+  Email: `owner@example.com`  
+  Password: `OwnerPass@1`
+
+- **User:**  
+  Register via the frontend or use:  
+  Email: `user@example.com`  
+  Password: `UserPass@1`
+
+---
+
+## Notes
+
+- All protected endpoints require `Authorization: Bearer <token>` header.
+- To create the first admin, insert directly into the database.
+- For store creation, the owner must exist and have the `"owner"` role.
+- Logout is handled on the frontend by removing the JWT token.
+
+---
+
+**This README covers both backend and frontend setup
